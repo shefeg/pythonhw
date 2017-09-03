@@ -1,6 +1,5 @@
 import numbers
 
-
 class Department:
 
     def __init__(self, *managers):
