@@ -47,7 +47,7 @@ class Employee():
         print "{0} {1}, manager: {2}, experience: {3}" .format(self.first_name, self.second_name, self.manager.second_name, self.experience)
 
     def setSalary(self):
-        if self.experience > 2:
+        if 2 < self.experience <= 5:
             self.salary += 200
         elif self.experience > 5:
             self.salary = self.salary * 1.2 + 500
@@ -122,13 +122,13 @@ class Manager(Employee):
             else:
                 devcount += 1
 
-        if self.team > 5 and devcount > len(self.team)/2:
+        if 5 < self.team <= 10 and devcount > len(self.team)/2:
             self.salary += 200
             self.salary *= 1.1
         elif self.team > 10 and devcount > len(self.team)/2:
             self.salary += 300
             self.salary *= 1.1
-        elif self.team > 5:
+        elif 5 < self.team <= 10:
             self.salary += 200
         elif self.team > 10:
             self.salary += 300
