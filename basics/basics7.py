@@ -16,4 +16,4 @@ def diaginal_reverse(general_scope, count_in_row):
             print rmatrix[k]
 
 
-diaginal_reverse(9,3)
+diaginal_reverse(9, 3)

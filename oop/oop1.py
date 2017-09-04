@@ -1,5 +1,9 @@
 import numbers
 
+class SalaryGivingError(Exception):
+     pass
+
+
 class Department:
 
     def __init__(self, *managers):
@@ -19,6 +23,7 @@ class Department:
         for item in range(len(Employee.employees)):
             salarylist.append([ value for key, value in Employee.employees[item].__dict__.items()
                     if key == 'second_name' or key == 'first_name' or key == 'salary' ])
+
 
         for i in range(len(salarylist)):
             print "{0} {1}: got salary: {2}" .format(salarylist[i][1],salarylist[i][2],salarylist[i][0])
@@ -47,10 +52,12 @@ class Employee():
         print "{0} {1}, manager: {2}, experience: {3}" .format(self.first_name, self.second_name, self.manager.second_name, self.experience)
 
     def setSalary(self):
+        total_salary = self.salary
         if 2 < self.experience <= 5:
-            self.salary += 200
+            total_salary = self.salary + 200
         elif self.experience > 5:
-            self.salary = self.salary * 1.2 + 500
+            total_salary = self.salary * 1.2 + 500
+        return total_salary
 
     def getSalary(self):
         print "{0} {1}: got salary {2}".format(self.first_name, self.second_name, self.salary)
@@ -71,14 +78,12 @@ class Designer(Employee):
         else:
             raise ValueError("\effcoef\" value must be a number")
 
-    def setSalary(self):
+    def getSalary(self):
         if 0 <= (self.effcoeff) <= 1:
-            self.salary += self.salary * self.effcoeff
+            self.salary += self.setSalary() * self.effcoeff
+            print "{0} {1}: got salary {2}".format(self.first_name, self.second_name, self.salary)
         else:
             raise ValueError("\"effcoef\" value must be between 0 and 1 inclusive")
-
-    def getSalary(self):
-        print "{0} {1}: got salary {2}".format(self.first_name, self.second_name, self.salary)
 
 
 class Manager(Employee):
@@ -112,32 +117,30 @@ class Manager(Employee):
         print "Team count is {}".format(len(self.team)) + '\n'
 
 
-    def setSalary(self):
+    def getSalary(self):
         descount = 0
         devcount = 0
-
+        self.salary = self.setSalary()
         for item in range(len(self.team)):
             if self.team[item] == 'Designer':
                 descount += 1
             else:
                 devcount += 1
 
-        if 5 < self.team <= 10 and devcount > len(self.team)/2:
+        if 5 < len(self.team) <= 10 and devcount > len(self.team)/2:
             self.salary += 200
             self.salary *= 1.1
-        elif self.team > 10 and devcount > len(self.team)/2:
+        elif len(self.team) > 10 and devcount > len(self.team)/2:
             self.salary += 300
             self.salary *= 1.1
-        elif 5 < self.team <= 10:
+        elif 5 < len(self.team) <= 10:
             self.salary += 200
-        elif self.team > 10:
+        elif len(self.team) > 10:
+            print self.team
             self.salary += 300
         elif devcount > len(self.team)/2:
             self.salary *= 1.1
 
-
-
-    def getSalary(self):
         print "{0} {1}: got salary {2}".format(self.first_name, self.second_name, self.salary)
 
 
@@ -150,12 +153,12 @@ mark_designer = Designer('Mark', 'Markov', 500, 20, peter_manager, 0.5)
 peter_manager.getEmployee()
 peter_manager.addTeamMember(john_developer, misha_developer,john_developer, misha_developer, mark_designer,mark_designer, mark_designer)
 peter_manager.getTeamCount()
-peter_manager.setSalary()
-
+# peter_manager.setSalary()
+#
 vasya_manager.getEmployee()
-vasya_manager.addTeamMember(john_developer, mark_designer)
+vasya_manager.addTeamMember()
 vasya_manager.getTeamCount()
-vasya_manager.setSalary()
+vasya_manager.getSalary()
 
 john_developer.getEmployee()
 john_developer.setSalary()
@@ -165,8 +168,9 @@ misha_developer.setSalary()
 
 mark_designer.getEmployee()
 mark_designer.setSalary()
+mark_designer.getSalary()
 
-it = Department(peter_manager, vasya_manager)
+it = Department(vasya_manager,peter_manager)
 it.getManList()
 it.giveSalary()
 
