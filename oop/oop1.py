@@ -1,7 +1,18 @@
 import numbers
 
-class SalaryGivingError(Exception):
-     pass
+
+class Error(Exception):
+   #Base class for other exceptions
+    pass
+
+class SalaryGivingError(Error):
+    pass
+
+class NotEmployeeException(Error):
+    pass
+
+class WrongEmployeeRoleError(Error):
+    pass
 
 
 class Department:
@@ -24,10 +35,14 @@ class Department:
             salarylist.append([ value for key, value in Employee.employees[item].__dict__.items()
                     if key == 'second_name' or key == 'first_name' or key == 'salary' ])
 
+        if vasya_manager.getTeamCount() == 0:
+            raise SalaryGivingError("There is no Employee in Vasiliev's team")
+        elif peter_manager.getTeamCount() == 0:
+            raise SalaryGivingError("There is no Employee in Petrov's team")
+
 
         for i in range(len(salarylist)):
             print "{0} {1}: got salary: {2}" .format(salarylist[i][1],salarylist[i][2],salarylist[i][0])
-
 
 
 class Employee():
@@ -46,7 +61,6 @@ class Employee():
             raise ValueError("\experience\" value must be a number")
         self.manager = manager
         self.employees.append(self)
-
 
     def getEmployee(self):
         print "{0} {1}, manager: {2}, experience: {3}" .format(self.first_name, self.second_name, self.manager.second_name, self.experience)
@@ -97,11 +111,32 @@ class Manager(Employee):
 
     def addTeamMember(self, *empinst):
         inst = []
+        managers = []
+        manager_name = []
         inst.extend(empinst)
+
+        if len(inst) == 0:
+            raise NotEmployeeException("There are no Employees")
+
         for item in range(len(inst)):
             self.team.append(inst[item].__class__.__name__)
-        print self.team
 
+        for item in range(len(Employee.employees)):
+            managers.append([key for key in Employee.employees[item].__dict__.items()])
+        # print managers
+
+        for x in range(len(managers)):
+            for y in range(len(managers[x])):
+                for z in range(len(managers[x][y])):
+                    # if managers[x][y][z] == 'Manager':
+                        manager_name.extend(managers[x])
+        print manager_name
+
+
+        # if len([x for x in self.team if x == 'Manager']):
+        #     raise WrongEmployeeRoleError("Employee {0} has unexpected role!" .format())
+
+        # print self.team
 
     def getTeamCount(self):
         descount = 0
@@ -115,7 +150,7 @@ class Manager(Employee):
 
         print "Member types are: Designers({0}) and Developers({1})" .format(descount,devcount)
         print "Team count is {}".format(len(self.team)) + '\n'
-
+        return len(self.team)
 
     def getSalary(self):
         descount = 0
@@ -151,26 +186,25 @@ misha_developer = Developer('Mihail', 'Mihailov', 500, 20, peter_manager)
 mark_designer = Designer('Mark', 'Markov', 500, 20, peter_manager, 0.5)
 
 peter_manager.getEmployee()
-peter_manager.addTeamMember(john_developer, misha_developer,john_developer, misha_developer, mark_designer,mark_designer, mark_designer)
+# peter_manager.addTeamMember(john_developer, misha_developer,john_developer, misha_developer, mark_designer,mark_designer, mark_designer)
 peter_manager.getTeamCount()
 # peter_manager.setSalary()
 #
 vasya_manager.getEmployee()
-vasya_manager.addTeamMember()
-vasya_manager.getTeamCount()
-vasya_manager.getSalary()
-
-john_developer.getEmployee()
-john_developer.setSalary()
-
-misha_developer.getEmployee()
-misha_developer.setSalary()
-
-mark_designer.getEmployee()
-mark_designer.setSalary()
-mark_designer.getSalary()
+vasya_manager.addTeamMember(peter_manager)
+# vasya_manager.getTeamCount()
+# vasya_manager.getSalary()
+#
+# john_developer.getEmployee()
+# john_developer.setSalary()
+#
+# misha_developer.getEmployee()
+# misha_developer.setSalary()
+#
+# mark_designer.getEmployee()
+# mark_designer.setSalary()
+# mark_designer.getSalary()
 
 it = Department(vasya_manager,peter_manager)
 it.getManList()
 it.giveSalary()
-
