@@ -112,7 +112,6 @@ class Manager(Employee):
     def addTeamMember(self, *empinst):
         inst = []
         managers = []
-        manager_name = []
         inst.extend(empinst)
 
         if len(inst) == 0:
@@ -123,20 +122,20 @@ class Manager(Employee):
 
         for item in range(len(Employee.employees)):
             managers.append([key for key in Employee.employees[item].__dict__.items()])
-        # print managers
 
-        for x in range(len(managers)):
-            for y in range(len(managers[x])):
-                for z in range(len(managers[x][y])):
-                    # if managers[x][y][z] == 'Manager':
-                        manager_name.extend(managers[x])
-        print manager_name
+        list = []
+        for s in range(len(managers)):
+            # print [item for item, name in s if 'team' in item]
+            list.append(dict(managers[s]))
+            # for k in s:
+            #     dic.update(k)
 
+        manager_name = [x['second_name'] for x in list if x['manager'] == None and filter(lambda t: t == 'Manager',x['team'])]
 
-        # if len([x for x in self.team if x == 'Manager']):
-        #     raise WrongEmployeeRoleError("Employee {0} has unexpected role!" .format())
+        if manager_name:
+            raise WrongEmployeeRoleError("Employee {0} has unexpected role!" .format(', '.join(manager_name)))
 
-        # print self.team
+        print self.team
 
     def getTeamCount(self):
         descount = 0
@@ -186,24 +185,24 @@ misha_developer = Developer('Mihail', 'Mihailov', 500, 20, peter_manager)
 mark_designer = Designer('Mark', 'Markov', 500, 20, peter_manager, 0.5)
 
 peter_manager.getEmployee()
-# peter_manager.addTeamMember(john_developer, misha_developer,john_developer, misha_developer, mark_designer,mark_designer, mark_designer)
+peter_manager.addTeamMember(john_developer, misha_developer,john_developer, misha_developer, mark_designer,mark_designer, mark_designer)
 peter_manager.getTeamCount()
-# peter_manager.setSalary()
+peter_manager.setSalary()
 #
 vasya_manager.getEmployee()
-vasya_manager.addTeamMember(peter_manager)
-# vasya_manager.getTeamCount()
-# vasya_manager.getSalary()
-#
-# john_developer.getEmployee()
-# john_developer.setSalary()
-#
-# misha_developer.getEmployee()
-# misha_developer.setSalary()
-#
-# mark_designer.getEmployee()
-# mark_designer.setSalary()
-# mark_designer.getSalary()
+vasya_manager.addTeamMember(john_developer)
+vasya_manager.getTeamCount()
+vasya_manager.getSalary()
+
+john_developer.getEmployee()
+john_developer.setSalary()
+
+misha_developer.getEmployee()
+misha_developer.setSalary()
+
+mark_designer.getEmployee()
+mark_designer.setSalary()
+mark_designer.getSalary()
 
 it = Department(vasya_manager,peter_manager)
 it.getManList()
